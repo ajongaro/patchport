@@ -3,32 +3,29 @@
 import { Command } from 'commander'
 import { patchport } from './patchport/main'
 import { GitHelpers } from './utils/gitHelpers'
-import simpleGit, { SimpleGit } from 'simple-git'
 
 const program = new Command()
 
 program
   .version('1.0.0')
-  .description('CLI tool for managing backports and patches')
+  .description('CLI for managing backports and patches at Gambyt')
   .option('-c, --commit <commitId>', 'Commit ID to cherry-pick')
-  .option('-o, --origin <branch>', 'Origin branch to use')
+  .option('-o, --origin <branch>', 'Origin branch where commit exists')
 
 program.parse(process.argv)
 
 const options = program.opts()
 
 async function run() {
+  const isAuthenticated = await GitHelpers.checkGhAuthStatus()
+  if (!isAuthenticated) {
+    await GitHelpers.promptGhAuthLogin()
+  }
+
   let commitId = options.commit
   let originBranch = options.origin
 
-  const git: SimpleGit = simpleGit()
-
-  // Store the current branch
-  const status = await git.status()
-  const currentBranch = status.current
-
   if (!originBranch) {
-    // Prompt for the origin branch
     originBranch = await GitHelpers.promptForOriginBranch()
     if (!originBranch) {
       console.error('No origin branch selected. Exiting.')
@@ -38,7 +35,7 @@ async function run() {
 
   if (!commitId) {
     // Switch to the origin branch before displaying the git log
-    const switched = await switchToBranch(originBranch)
+    const switched = await GitHelpers.switchToBranch(originBranch)
     if (!switched) {
       console.error(`Failed to switch to branch ${originBranch}. Exiting.`)
       process.exit(1)
@@ -52,21 +49,8 @@ async function run() {
     }
   }
 
-  // Call the 'patchport' function with the commit ID and origin branch
+  // TODO: Add deployment apps
   await patchport(commitId, originBranch)
 }
 
 run()
-
-// Helper function to switch to the origin branch
-async function switchToBranch(branchName: string): Promise<boolean> {
-  const git: SimpleGit = simpleGit()
-  try {
-    await git.checkout(branchName)
-    return true
-  } catch (error) {
-    console.error(`Error: Could not switch to branch '${branchName}'.`)
-    console.error(error)
-    return false
-  }
-}
