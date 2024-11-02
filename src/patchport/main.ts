@@ -19,7 +19,6 @@ export const patchport = async (
   const git: SimpleGit = simpleGit()
 
   displaySplashScreen()
-  // Get the commit title
   let commitTitle: string
   try {
     commitTitle = await git.raw(['log', '--format=%s', '-n', '1', commitId])
