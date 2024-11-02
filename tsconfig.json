@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Target ECMAScript 6
+    "module": "commonjs", // Use CommonJS module system
+    "lib": ["ES2020"], // Include ES2020 library definitions
+    "outDir": "./dist", // Redirect output structure to the 'dist' directory
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules
+    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+    "skipLibCheck": true // Skip type checking of declaration files
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
