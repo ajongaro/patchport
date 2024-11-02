@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
 import { SimpleGit } from 'simple-git'
+import { exec } from 'child_process'
+import { Branch, VALID_BRANCHES, ValidBranchName } from '../constants'
 
 export const displayTitle = () => {
   console.log('\n╔══════════════════════════════════════════════════════╗')
@@ -43,6 +45,7 @@ export const capitalize = (input: string): string => {
   return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase()
 }
 
+// use object?
 export const caseEnv = (input: string): string => {
   const envs: { [key: string]: string } = {
     develop: 'Develop',
@@ -54,12 +57,11 @@ export const caseEnv = (input: string): string => {
 }
 
 export const isPatchOrBackport = (
-  origin: string,
-  destination: string
+  origin: ValidBranchName,
+  destination: ValidBranchName
 ): string => {
-  const environments = ['develop', 'qa', 'uat', 'prod']
-  const originIndex = environments.indexOf(origin)
-  const destinationIndex = environments.indexOf(destination)
+  const originIndex = VALID_BRANCHES.indexOf(origin)
+  const destinationIndex = VALID_BRANCHES.indexOf(destination)
 
   if (originIndex > destinationIndex) {
     return 'backport'
@@ -68,12 +70,11 @@ export const isPatchOrBackport = (
 }
 
 export const validateBranches = (
-  origin: string,
-  destination: string
+  origin: ValidBranchName,
+  destination: ValidBranchName
 ): boolean => {
-  const environments = ['develop', 'qa', 'uat', 'prod']
-  const isValidOrigin = environments.includes(origin)
-  const isValidDestination = environments.includes(destination)
+  const isValidOrigin = VALID_BRANCHES.includes(origin)
+  const isValidDestination = VALID_BRANCHES.includes(destination)
 
   return isValidOrigin && isValidDestination && origin !== destination
 }
@@ -107,4 +108,18 @@ export const bumpNpmVersionPatch = async (git: SimpleGit, branch: string) => {
 
   await git.add('package.json')
   await git.commit(`Version bump ${previousVersion} -> ${newVersion}`)
+}
+
+export const execShellCommand = (cmd: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+        reject(error)
+      } else if (stderr) {
+        reject(stderr)
+      } else {
+        resolve(stdout)
+      }
+    })
+  })
 }

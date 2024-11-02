@@ -1,8 +1,8 @@
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import simpleGit, { SimpleGit } from 'simple-git'
-import fs from 'fs'
-import path from 'path'
+// import fs from 'fs'
+// import path from 'path'
 import { exec } from 'child_process'
 import {
   displayTitle,
@@ -13,27 +13,17 @@ import {
   isPatchOrBackport,
   validateBranches,
   bumpNpmVersionPatch,
+  execShellCommand,
 } from '../utils/helperFunctions'
+import { ValidBranchName } from '../constants'
 
-export const execShellCommand = (cmd: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-      } else if (stderr) {
-        reject(stderr)
-      } else {
-        resolve(stdout)
-      }
-    })
-  })
-}
-
-export const patchport = async (commitId: string) => {
+export const patchport = async (
+  commitId: string,
+  originBranch: ValidBranchName
+) => {
   const git: SimpleGit = simpleGit()
 
   displayTitle()
-
   // Get the commit title
   let commitTitle: string
   try {
@@ -73,16 +63,9 @@ export const patchport = async (commitId: string) => {
     descriptionForPR = newDescription
   }
 
-  // Get origin and destination branches
-  const { originBranch } = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'originBranch',
-      message: 'Origin Branch',
-      choices: ['develop', 'qa', 'uat', 'prod'],
-    },
-  ])
+  // We already have the origin branch, no need to prompt again
 
+  // Get destination branches
   const { destinationBranches } = await inquirer.prompt([
     {
       type: 'checkbox',
