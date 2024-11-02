@@ -41,42 +41,28 @@ export const toKebabCase = (input: string): string => {
     .replace(/^-+|-+$/g, '')
 }
 
-export const capitalize = (input: string): string => {
-  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase()
-}
+type ActionType =
+  | { action: 'backport'; capAction: 'Backport' }
+  | { action: 'patch'; capAction: 'Patch' }
 
-// use object?
-export const caseEnv = (input: string): string => {
-  const envs: { [key: string]: string } = {
-    develop: 'Develop',
-    qa: 'QA',
-    uat: 'UAT',
-    prod: 'Prod',
-  }
-  return envs[input.toLowerCase()] || input
-}
-
-export const isPatchOrBackport = (
+export const generateActionType = (
   origin: ValidBranchName,
   destination: ValidBranchName
-): string => {
+): ActionType => {
   const originIndex = VALID_BRANCHES.indexOf(origin)
   const destinationIndex = VALID_BRANCHES.indexOf(destination)
 
   if (originIndex > destinationIndex) {
-    return 'backport'
+    return { action: 'backport', capAction: 'Backport' }
   }
-  return 'patch'
+  return { action: 'patch', capAction: 'Patch' }
 }
 
-export const validateBranches = (
-  origin: ValidBranchName,
-  destination: ValidBranchName
-): boolean => {
-  const isValidOrigin = VALID_BRANCHES.includes(origin)
-  const isValidDestination = VALID_BRANCHES.includes(destination)
-
-  return isValidOrigin && isValidDestination && origin !== destination
+export function isValidBranch(
+  branch: string,
+  originBranch: ValidBranchName
+): branch is ValidBranchName {
+  return branch !== originBranch && VALID_BRANCHES.includes(branch)
 }
 
 export const getActiveVersion = (): string => {

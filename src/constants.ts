@@ -8,12 +8,7 @@ export type ValidBranchName = 'develop' | 'qa' | 'uat' | 'prod'
 type ValidCapName = 'Develop' | 'QA' | 'UAT' | 'Prod'
 type ValidGitName = 'develop' | 'qa' | 'uat' | 'master'
 
-export const VALID_BRANCHES: ValidBranchName[] = [
-  'develop',
-  'qa',
-  'uat',
-  'prod',
-]
+export const VALID_BRANCHES = ['develop', 'qa', 'uat', 'prod']
 
 export const BranchConfig: Record<ValidBranchName, Branch> = {
   develop: {
