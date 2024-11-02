@@ -29,7 +29,7 @@ export const execShellCommand = (cmd: string): Promise<string> => {
   })
 }
 
-export const main = async (commitId: string) => {
+export const patchport = async (commitId: string) => {
   const git: SimpleGit = simpleGit()
 
   displayTitle()
