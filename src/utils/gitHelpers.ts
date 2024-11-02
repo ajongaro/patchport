@@ -1,4 +1,4 @@
-import { execShellCommand } from '../main'
+import { execShellCommand } from '../patchport/main'
 
 export const checkGhAuthStatus = async (): Promise<boolean> => {
   try {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { main } from './main'
+import { main } from './patchport/main'
 
 // Extract the commit ID from the command-line arguments
 const [, , commitId] = process.argv

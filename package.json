@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "a deployment and development environment management utility",
   "main": "index.js",
+  "bin": {
+    "patchport": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -23,6 +26,7 @@
     "commander": "^12.1.0",
     "inquirer": "^12.0.1",
     "lodash": "^4.17.21",
+    "ora": "^8.1.1",
     "simple-git": "^3.27.0"
   }
 }

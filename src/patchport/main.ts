@@ -13,7 +13,7 @@ import {
   isPatchOrBackport,
   validateBranches,
   bumpNpmVersionPatch,
-} from './utils/helperFunctions'
+} from '../utils/helperFunctions'
 
 export const execShellCommand = (cmd: string): Promise<string> => {
   return new Promise((resolve, reject) => {
