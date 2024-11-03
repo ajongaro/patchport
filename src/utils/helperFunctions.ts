@@ -4,7 +4,6 @@ import chalk from 'chalk'
 import { SimpleGit } from 'simple-git'
 import { exec } from 'child_process'
 import { VALID_BRANCHES, ValidBranchName } from '../constants'
-import inquirer from 'inquirer'
 
 export const displaySplashScreen = () => {
   console.log('\n╔══════════════════════════════════════════════════════╗')

@@ -139,7 +139,7 @@ export const patchport = async (
       const prCommand = `gh pr create --title "${prTitle}" --body "${prBody}" --base "${gitBranchName}" --head "${newBranchName}" --label "${capAction}"`
       await execShellCommand(prCommand)
     } catch (error) {
-      execShellCommand('gs')
+      await execShellCommand('gs')
       console.error(chalk.red('Failed to create pull request using gh CLI.'))
       console.error(error)
     }
