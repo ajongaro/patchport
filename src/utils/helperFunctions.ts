@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import chalk from 'chalk'
 import { SimpleGit } from 'simple-git'
-import { exec } from 'child_process'
+import { exec, spawn } from 'child_process'
 import { VALID_BRANCHES, ValidBranchName } from '../constants'
 
 export const displaySplashScreen = () => {
@@ -96,16 +96,38 @@ export const bumpNpmVersionPatch = async (git: SimpleGit, branch: string) => {
   await git.commit(`Version bump ${previousVersion} -> ${newVersion}`)
 }
 
-export const execShellCommand = (cmd: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
+export const execShellCommand = (
+  cmd: string,
+  args: string[] = [],
+  options: { interactive?: boolean } = {}
+): Promise<string | void> => {
+  if (options.interactive) {
+    // Use spawn for interactive commands
+    return new Promise((resolve, reject) => {
+      const child = spawn(cmd, args, { stdio: 'inherit' })
+
+      child.on('error', (error) => {
         reject(error)
-      } else if (stderr) {
-        reject(stderr)
-      } else {
-        resolve(stdout)
-      }
+      })
+
+      child.on('close', (code) => {
+        if (code === 0) {
+          resolve()
+        } else {
+          reject(new Error(`Command failed with exit code ${code}`))
+        }
+      })
     })
-  })
+  } else {
+    // Use exec for non-interactive commands
+    return new Promise((resolve, reject) => {
+      exec([cmd, ...args].join(' '), (error, stdout, stderr) => {
+        if (error) {
+          reject(stderr || error.message)
+        } else {
+          resolve(stdout)
+        }
+      })
+    })
+  }
 }

@@ -62,7 +62,7 @@ export async function selectCommitFromLog(
   try {
     // Fetch the latest commits from the current branch
     await git.pull('origin', branchName)
-    const log = await git.log({ maxCount: 20 })
+    const log = await git.log({ maxCount: 30 })
 
     if (log.all.length === 0) {
       console.error('No commits found in the current branch.')
