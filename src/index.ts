@@ -47,7 +47,7 @@ async function run() {
     }
 
     // No commit ID provided, display git log for selection
-    commitId = await GitHelpers.selectCommitFromLog()
+    commitId = await GitHelpers.selectCommitFromLog(originBranch)
     if (!commitId) {
       console.error('No commit selected. Exiting.')
       process.exit(1)
