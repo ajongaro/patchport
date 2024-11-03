@@ -20,6 +20,8 @@ const options = program.opts()
 async function run() {
   displaySplashScreen()
 
+  await GitHelpers.checkForUncommittedChanges()
+
   const isAuthenticated = await GitHelpers.checkGhAuthStatus()
   if (!isAuthenticated) {
     await GitHelpers.promptGhAuthLogin()

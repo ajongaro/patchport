@@ -8,7 +8,6 @@ import {
   execShellCommand,
   generateActionType,
   isValidBranch,
-  displaySplashScreen,
 } from '../utils/helperFunctions'
 import { BranchConfig, VALID_BRANCHES, ValidBranchName } from '../constants'
 

@@ -102,8 +102,22 @@ async function switchToBranch(branchName: string): Promise<boolean> {
   }
 }
 
+async function checkForUncommittedChanges() {
+  const git: SimpleGit = simpleGit()
+  const status = await git.status()
+  if (status.files.length > 0) {
+    console.error(
+      chalk.red(
+        'You have uncommitted changes. Please commit or stash them before running this tool.'
+      )
+    )
+    process.exit(1)
+  }
+}
+
 export const GitHelpers = {
   checkGhAuthStatus,
+  checkForUncommittedChanges,
   promptGhAuthLogin,
   promptForOriginBranch,
   selectCommitFromLog,
