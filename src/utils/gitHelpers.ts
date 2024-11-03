@@ -54,11 +54,14 @@ async function promptForOriginBranch(): Promise<ValidBranchName> {
   return originBranch
 }
 
-export async function selectCommitFromLog(): Promise<string | null> {
+export async function selectCommitFromLog(
+  branchName: string
+): Promise<string | null> {
   console.log('')
   const git: SimpleGit = simpleGit()
   try {
     // Fetch the latest commits from the current branch
+    await git.pull('origin', branchName)
     const log = await git.log({ maxCount: 20 })
 
     if (log.all.length === 0) {
