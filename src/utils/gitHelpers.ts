@@ -27,10 +27,11 @@ const promptGhAuthLogin = async (): Promise<void> => {
 
   if (shouldLogin) {
     try {
-      await execShellCommand('gh auth login')
+      await execShellCommand('gh', ['auth', 'login'], { interactive: true })
       console.log(chalk.green('Authentication successful!'))
     } catch (error) {
       console.error(chalk.red('Authentication failed. Please try again.'))
+      console.error(error)
       process.exit(1)
     }
   } else {
