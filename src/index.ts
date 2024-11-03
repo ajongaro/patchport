@@ -3,6 +3,7 @@
 import { Command } from 'commander'
 import { patchport } from './patchport/main'
 import { GitHelpers } from './utils/gitHelpers'
+import { displaySplashScreen } from './utils/helperFunctions'
 
 const program = new Command()
 
@@ -17,6 +18,8 @@ program.parse(process.argv)
 const options = program.opts()
 
 async function run() {
+  displaySplashScreen()
+
   const isAuthenticated = await GitHelpers.checkGhAuthStatus()
   if (!isAuthenticated) {
     await GitHelpers.promptGhAuthLogin()

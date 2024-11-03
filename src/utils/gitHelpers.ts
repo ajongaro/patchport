@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import inquirer from 'inquirer'
-import { VALID_BRANCHES } from '../constants'
+import { VALID_BRANCHES, ValidBranchName } from '../constants'
 import simpleGit, { SimpleGit } from 'simple-git'
 import { execShellCommand } from './helperFunctions'
 
@@ -40,7 +40,8 @@ const promptGhAuthLogin = async (): Promise<void> => {
 }
 
 //
-async function promptForOriginBranch(): Promise<string | null> {
+async function promptForOriginBranch(): Promise<ValidBranchName> {
+  console.log('')
   const { originBranch } = await inquirer.prompt([
     {
       type: 'list',
@@ -50,12 +51,12 @@ async function promptForOriginBranch(): Promise<string | null> {
     },
   ])
 
-  return originBranch || null
+  return originBranch
 }
 
 export async function selectCommitFromLog(): Promise<string | null> {
+  console.log('')
   const git: SimpleGit = simpleGit()
-
   try {
     // Fetch the latest commits from the current branch
     const log = await git.log({ maxCount: 20 })

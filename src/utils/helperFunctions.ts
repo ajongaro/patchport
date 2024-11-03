@@ -4,6 +4,7 @@ import chalk from 'chalk'
 import { SimpleGit } from 'simple-git'
 import { exec } from 'child_process'
 import { VALID_BRANCHES, ValidBranchName } from '../constants'
+import inquirer from 'inquirer'
 
 export const displaySplashScreen = () => {
   console.log('\n╔══════════════════════════════════════════════════════╗')
@@ -23,7 +24,7 @@ export const displaySplashScreen = () => {
     chalk.yellow(' /_/    \\__,_/\\__/\\___/_/ /_/_/    \\____/_/   \\__/  ')
   )
   console.log('')
-  console.log('╚══════════════════════════════════════════════════════╝')
+  console.log('╚══════════════════════════════════════════════════════╝\n')
 }
 
 export const getDescriptionFromTitle = (title: string): string => {
