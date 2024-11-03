@@ -8,13 +8,15 @@
   },
   "scripts": {
     "build": "tsc",
+    "install-cli": "npm run build && npm install -g .",
+    "uninstall-cli": "npm uninstall -g patchport",
     "start": "node dist/index.js",
     "format": "prettier --write 'src/**/*.{ts,tsx}'",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anthony Ongaro",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.8.6",
@@ -22,7 +24,7 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
+    "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "inquirer": "^12.0.1",
     "lodash": "^4.17.21",

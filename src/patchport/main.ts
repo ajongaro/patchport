@@ -18,7 +18,6 @@ export const patchport = async (
 ) => {
   const git: SimpleGit = simpleGit()
 
-  displaySplashScreen()
   let commitTitle: string
   try {
     commitTitle = await git.raw(['log', '--format=%s', '-n', '1', commitId])
@@ -37,6 +36,7 @@ export const patchport = async (
   console.log(commitTitle.trim())
 
   // Confirm or edit the description
+  console.log('')
   const { validTitle } = await inquirer.prompt([
     {
       type: 'confirm',
@@ -57,6 +57,7 @@ export const patchport = async (
     descriptionForPR = newDescription
   }
 
+  console.log('')
   const { destinationBranches } = await inquirer.prompt([
     {
       type: 'checkbox',
@@ -77,7 +78,9 @@ export const patchport = async (
   ])
 
   if (!doIt) {
-    console.log(chalk.red('\nAborting...'))
+    console.log(
+      chalk.red('\nAborting... select destination branches with space bar')
+    )
     process.exit(1)
   }
 
@@ -136,6 +139,7 @@ export const patchport = async (
       const prCommand = `gh pr create --title "${prTitle}" --body "${prBody}" --base "${gitBranchName}" --head "${newBranchName}" --label "${capAction}"`
       await execShellCommand(prCommand)
     } catch (error) {
+      execShellCommand('gs')
       console.error(chalk.red('Failed to create pull request using gh CLI.'))
       console.error(error)
     }
