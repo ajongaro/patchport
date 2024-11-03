@@ -120,10 +120,8 @@ export const patchport = async (
       process.exit(1)
     }
 
-    // Bump npm version
     await bumpNpmVersionPatch(git, gitBranchName)
 
-    // Push the new branch
     try {
       await git.push('origin', newBranchName)
     } catch (error) {
@@ -143,7 +141,6 @@ export const patchport = async (
     }
   }
 
-  // Return to a safe branch
   try {
     await git.checkout(BranchConfig['qa'].gitName)
   } catch (error) {

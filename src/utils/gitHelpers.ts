@@ -40,7 +40,7 @@ const promptGhAuthLogin = async (): Promise<void> => {
   }
 }
 
-//
+// git
 async function promptForOriginBranch(): Promise<ValidBranchName> {
   console.log('')
   const { originBranch } = await inquirer.prompt([
@@ -61,7 +61,6 @@ export async function selectCommitFromLog(
   console.log('')
   const git: SimpleGit = simpleGit()
   try {
-    // Fetch the latest commits from the current branch
     await git.pull('origin', branchName)
     const log = await git.log({ maxCount: 30 })
 
@@ -70,13 +69,11 @@ export async function selectCommitFromLog(
       return null
     }
 
-    // Prepare choices for inquirer prompt
     const choices = log.all.map((commit) => ({
       name: `${commit.hash.substring(0, 7)} - ${commit.message}`,
       value: commit.hash,
     }))
 
-    // Prompt the user to select a commit
     const { selectedCommit } = await inquirer.prompt([
       {
         type: 'list',

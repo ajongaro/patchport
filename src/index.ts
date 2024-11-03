@@ -39,14 +39,12 @@ async function run() {
   }
 
   if (!commitId) {
-    // Switch to the origin branch before displaying the git log
     const switched = await GitHelpers.switchToBranch(originBranch)
     if (!switched) {
       console.error(`Failed to switch to branch ${originBranch}. Exiting.`)
       process.exit(1)
     }
 
-    // No commit ID provided, display git log for selection
     commitId = await GitHelpers.selectCommitFromLog(originBranch)
     if (!commitId) {
       console.error('No commit selected. Exiting.')
