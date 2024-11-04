@@ -116,11 +116,68 @@ async function checkForUncommittedChanges() {
   }
 }
 
+async function isCorrectRepository(
+  expectedRemoteUrl: string
+): Promise<boolean> {
+  const git: SimpleGit = simpleGit()
+
+  try {
+    // Check if the current directory is a git repository
+    const isRepo = await git.checkIsRepo()
+    if (!isRepo) {
+      console.error('The current directory is not a git repository.')
+      return false
+    }
+
+    // Get the remote URLs
+    const remotes = await git.getRemotes(true)
+    // Find the 'origin' remote
+    const originRemote = remotes.find((remote) => remote.name === 'origin')
+
+    if (!originRemote) {
+      console.error('No origin remote found.')
+      return false
+    }
+
+    const remoteUrl = originRemote.refs.fetch
+    // Compare the remote URL with the expected URL
+    return normalizeGitUrl(remoteUrl) === normalizeGitUrl(expectedRemoteUrl)
+  } catch (error) {
+    console.error('Failed to get remote URL:', error)
+    return false
+  }
+}
+
+function normalizeGitUrl(url: string): string {
+  // Normalize URLs for comparison
+  // Convert SSH URLs to a standard format
+  // e.g., git@github.com:user/repo.git -> https://github.com/user/repo
+  // Remove .git suffix
+
+  let normalizedUrl = url
+
+  // Handle SSH URLs
+  const sshRegex = /^git@([^:]+):(.+)$/
+  const sshMatch = url.match(sshRegex)
+  if (sshMatch) {
+    const host = sshMatch[1]
+    const path = sshMatch[2]
+    normalizedUrl = `https://${host}/${path}`
+  }
+
+  // Remove trailing .git
+  normalizedUrl = normalizedUrl.replace(/\.git$/, '')
+
+  // Convert to lowercase for case-insensitive comparison
+  return normalizedUrl.toLowerCase()
+}
+
 export const GitHelpers = {
   checkGhAuthStatus,
   checkForUncommittedChanges,
   promptGhAuthLogin,
   promptForOriginBranch,
+  isCorrectRepository,
   selectCommitFromLog,
   switchToBranch,
 }
