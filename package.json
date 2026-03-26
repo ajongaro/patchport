@@ -1,6 +1,6 @@
 {
   "name": "patchport",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a deployment and development environment management utility",
   "main": "index.js",
   "bin": {
